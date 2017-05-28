@@ -1,0 +1,32 @@
+apply plugin: "java"
+apply plugin: "eclipse"
+
+repositories {
+	mavenLocal()
+	jcenter()
+    mavenCentral()
+}
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+
+dependencies {
+
+    // spring boot framework
+	compile "org.springframework.boot:spring-boot-starter-web:${springbootVersion}"
+	compile "org.springframework.boot:spring-boot-starter-jdbc:${springbootVersion}"
+	compile "com.oracle:ojdbc6:12.1.0.1-atlassian-hosted"
+	
+	compile "org.springframework.boot:spring-boot-starter-thymeleaf:${springbootVersion}"
+	compile "org.springframework.boot:spring-boot-devtools:${springbootVersion}"
+
+	compile "com.mchange:c3p0:0.9.5.2"
+	
+	compile "org.yaml:snakeyaml:1.18"
+    
+    // test framework
+    testCompile "org.springframework.boot:spring-boot-starter-test:${springbootVersion}"
+    testCompile "junit:junit:4.12"
+}
+

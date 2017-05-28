@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8"/>
+		<title>data visualization</title>
+		<link rel="stylesheet" type="text/css" href="css/index.css" />
+		<style>
+			
+		</style>
+
+	</head>
+	<body>
+		<div class="config-panel">
+			<div class="ds-title">
+				<select id="select-ds">
+					<option value="" selected="true">---select datasource---</option>
+				</select>
+				<a id="edit">edit</a>
+			</div>
+			<div class="config-datasource">
+				<div class="ds-content">
+					<select id="select-dbms-type" class="for-new-ds" style="display: none;">
+						<option value="" selected="true">---select dbms type---</option>
+					</select>
+					<input type="text" id="ds-name" placeholder="ds name" class="for-new-ds" style="display: none;"/>
+					<input type="text" id="ds-url"  placeholder="db url" />
+					<input type="text" id="ds-user" placeholder="db username" />
+					<input type="text" id="ds-pass" placeholder="db password" />
+				</div>
+				<div class="ds-actions">
+					<button id="ds-delete" >delete</button> 
+					<button id="ds-new" >new</button> 
+					<button id="ds-test" >test</button> 
+					<button id="ds-save" >save</button> 
+				</div>
+			</div>
+			<div class="app-title">Data Visualization</div>
+			<div class="user-info">
+				<label id="username">wl59746</label>
+				<label id="logout">logout</label>
+			</div>
+		</div>
+		<div class="view-content">
+			<div class="view-menu">
+				<div class="home-views"></div>
+				<ul class="children-view"></ul>
+			</div>
+			<div class="svgContainer">
+				<svg id="main-svg"></svg>
+			</div>
+		</div>
+	</body>
+	<script src="js/d3/d3.min.js"></script>
+	<script src="js/app.js"></script>
+</html>
