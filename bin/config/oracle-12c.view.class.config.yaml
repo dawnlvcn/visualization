@@ -1,4 +1,0 @@
----
-all user: com.citi.vdict.entity.view.AllUser
-all table: com.citi.vdict.entity.view.AllTable
-...
