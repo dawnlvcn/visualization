@@ -3,6 +3,15 @@ package com.citi.vdict.chart;
 import com.citi.vdict.utils.StringUtils;
 
 public enum ChartType {
+	PIE("PIE"),
+	LINECHART("LINECHART"),
+	CHORD("CHORD"),
+	TREE("TREE"),
+	CLUSTER("CLUSTER"),
+	BUNDLE("BUNDLE"),
+	PACK("PACK"),
+	HISTOGRAM("HISTOGRAM"),
+	PARTITION("PARTITION"),
 	TREEMAP("TREEMAP"),
 	FORCE("FORCE");
 	private String value;

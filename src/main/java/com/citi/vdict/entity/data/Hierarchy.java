@@ -1,14 +1,14 @@
 package com.citi.vdict.entity.data;
 
-public class TreeMap {
+public class Hierarchy {
 	private String name;
 	private Object children;
 
-	public TreeMap() {
+	public Hierarchy() {
 
 	}
 
-	public TreeMap(String name, Object children) {
+	public Hierarchy(String name, Object children) {
 		setName(name);
 		setChildren(children);
 	}

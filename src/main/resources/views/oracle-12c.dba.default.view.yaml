@@ -8,20 +8,40 @@ all table:
   statement: 'select owner,table_name,tablespace_name,status,num_rows,avg_row_len from dba_tables ##FILTERDEFAULT##'
   filterdefault: 'where owner not in ( ##DEFAULTUSERLIST## )'
   charttype: force
-user and tables:
-  statement: 'select owner, table_name from dba_tables ##FILTERDEFAULT##'
-  filterdefault: 'where owner not in ( ##DEFAULTUSERLIST## )'
-  charttype: force
-user and views:
-  statement: 'select owner, view_name from dba_views ##FILTERDEFAULT##'
-  filterdefault: 'where owner not in ( ##DEFAULTUSERLIST## )'
-  charttype: force
-current sessions:
-  statement: select username, osuser, machine, program from v$session where username is not null
+pack:
+  statement: 
+  filterdefault: 
+  charttype: pack
+pie:
+  statement: 
+  filterdefault: 
+  charttype: pie
+line chart:
+  statement: null
   filterdefault: null
-  charttype: force
-process info:
-  statement: select p.pid, p.spid, b.name, b.description from v$process p, v$bgprocess b where p.addr = b.paddr and b.paddr <> '00'
+  charttype: linechart
+chort:
+  statement: null
   filterdefault: null
-  charttype: force
+  charttype: chort
+tree:
+  statement: null
+  filterdefault: null
+  charttype: tree
+cluster:
+  statement: null
+  filterdefault: null
+  charttype: cluster
+bundle:
+  statement: null
+  filterdefault: null
+  charttype: bundle
+histogram:
+  statement: null
+  filterdefault: null
+  charttype: histogram
+partition:
+  statement: null
+  filterdefault: null
+  charttype: partition
 ...

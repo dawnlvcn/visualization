@@ -28,6 +28,9 @@ public class DataView {
 	}
 
 	public String getStatement(boolean isFilterDefault) {
+		if (statement == null) {
+			return "";
+		}
 		String repalce = isFilterDefault ? filterDefault : "";
 		return statement.replace(FILTERDEFAULTPLACEHOLDER, repalce);
 	}

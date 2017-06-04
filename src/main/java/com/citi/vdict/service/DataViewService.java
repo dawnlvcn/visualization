@@ -155,7 +155,7 @@ public class DataViewService {
 		DataView dataView = new DataView();
 		dataView.setDbmsType(viewRow.get(ApplicationEnum.DBMSTYPE.value()).toString());
 		dataView.setViewName(viewRow.get(ApplicationEnum.VIEWNAME.value()).toString());
-		dataView.setStatement(viewRow.get(ApplicationEnum.VIEWSTATEMENMT.value()).toString());
+		dataView.setStatement(objToString(viewRow.get(ApplicationEnum.VIEWSTATEMENMT.value())));
 		dataView.setFilterDefault(objToString(viewRow.get(ApplicationEnum.VIEFILTERDEFAULT.value())));
 		dataView.setChartType(
 				ChartType.getChartType(viewRow.get(ApplicationEnum.CHARTTYPE.value().toString()).toString()));
