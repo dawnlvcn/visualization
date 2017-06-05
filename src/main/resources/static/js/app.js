@@ -49,9 +49,10 @@ var viewMenuDisplay = {
 }
 
 var graphContainer = d3.select(".graphContainer")
-                       .style("width", containerWidth + "px")
-                       .style("height", containerHeight + "px")
-                       .style("display", "none");
+                       .style("width", width + "px")
+                       .style("height", height + "px")
+                       .style("display", "none")
+                       .style("top", margin.top + "px");
 
 var graphDisplay = {
     hide : function() {

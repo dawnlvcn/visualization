@@ -1,14 +1,16 @@
 package com.citi.vdict.entity.data;
 
+import java.util.List;
+
 public class Hierarchy {
 	private String name;
-	private Object children;
+	private List<?> children;
 
 	public Hierarchy() {
 
 	}
 
-	public Hierarchy(String name, Object children) {
+	public Hierarchy(String name, List<?> children) {
 		setName(name);
 		setChildren(children);
 	}
@@ -25,7 +27,7 @@ public class Hierarchy {
 		return children;
 	}
 
-	public void setChildren(Object children) {
+	public void setChildren(List<?> children) {
 		this.children = children;
 	}
 }

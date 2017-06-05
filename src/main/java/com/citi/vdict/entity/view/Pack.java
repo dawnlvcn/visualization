@@ -18,23 +18,23 @@ public class Pack implements BaseView {
 
 	@Override
 	public Object getViewData() {
-		// TODO Auto-generated method stub
-		Hierarchy h1 = new Hierarchy();
-		h1.setName("level1");
-		List<Hierarchy> h2s = new ArrayList<>();
-		h2s.add(new Hierarchy("level2-1", new Node("level2-1-id", Level.LEVEL2)));
-		h2s.add(new Hierarchy("level2-2", new Node("level2-2-id", Level.LEVEL2)));
-		h2s.add(new Hierarchy("level2-3", new Node("level2-3-id", Level.LEVEL2)));
-		Hierarchy h3 = new Hierarchy();
-		h3.setName("level2-4");
-		List<Hierarchy> h3s = new ArrayList<>();
-		h3.setChildren(h3s);
-		h3s.add(new Hierarchy("level3-1", new Node("level3-1-id", Level.LEVEL3)));
-		h3s.add(new Hierarchy("level3-2", new Node("level3-2-id", Level.LEVEL3)));
-		h3s.add(new Hierarchy("level3-3", new Node("level3-3-id", Level.LEVEL3)));
-		h2s.add(new Hierarchy("level2-4", h3));
-		h1.setChildren(h2s);
-		return h1;
+		Hierarchy h = new Hierarchy();
+		h.setName("level1");
+		List<Object> h1s = new ArrayList<>();
+		h1s.add(new Node("level1-1-id", Level.LEVEL1));
+		h1s.add(new Node("level1-2-id", Level.LEVEL1));
+		h1s.add(new Node("level1-3-id", Level.LEVEL1));
+
+		Hierarchy h2 = new Hierarchy();
+		h2.setName("level1-4");
+		List<Node> h2s = new ArrayList<>();
+		h2s.add(new Node("level2-1-id", Level.LEVEL3));
+		h2s.add(new Node("level2-2-id", Level.LEVEL3));
+		h2s.add(new Node("level2-3-id", Level.LEVEL3));
+		h2.setChildren(h2s);
+		h1s.add(h2);
+		h.setChildren(h1s);
+		return h;
 	}
 
 }

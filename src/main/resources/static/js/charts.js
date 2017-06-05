@@ -206,7 +206,49 @@ function drawForce(data, selection, width, height, callback) {
 }
 
 function drawPack(data, selection, width, height, callback) {
-    console.log(data);
+    selection.selectAll("*").remove();
+
+    var graphSvg = selection.append("svg")
+                            .attr("class", "graphSvg")
+                            .attr("width", width)
+                            .attr("height", height);
+
+    var pack = d3.pack().size([width, height]).padding(5);
+
+    var rootData = d3.hierarchy(data).sum(function(d) {
+        return (10 - (+d.level));
+    }).sort(function(a, b) {
+        return b.level - a.level;
+    });
+    console.log(rootData);
+    console.log(pack(rootData).descendants());
+
+    var node = graphSvg.selectAll(".packnode")
+                       .data(pack(rootData).descendants())
+                       .enter()
+                       .append("g")
+                       .attr("class", "packnode")
+                       .attr("transform", function(d) {
+                           return "translate(" + d.x + "," + d.y + ")";
+                       });
+    node.append("circle")
+        .attr("r", function(d) {
+            return d.r;
+        })
+        .style("fill", "rgb(31, 119, 180)")
+        .style("fill-opacity", "0.25")
+        .style("stroke", "rgb(31, 119, 180)")
+        .style("stroke-width", "1px");
+
+    node.append("title").text(function(d) {
+        return d.data.name + "\n";
+    });
+
+    node.filter(function(d) {
+        return !d.children;
+    }).append("text").attr("dy", "0.3em").text(function(d) {
+        return d.data.name.substring(0, d.r / 3);
+    }).style("font", "10px sans-serif").style("text-anchor", "middle");
 }
 
 function drawTree(data, selection, width, height, callback) {

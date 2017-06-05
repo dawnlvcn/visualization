@@ -14,9 +14,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.citi.vdict.entity.DataSourceKey;
 import com.citi.vdict.entity.DataView;
+import com.citi.vdict.entity.data.Hierarchy;
 import com.citi.vdict.entity.data.Level;
 import com.citi.vdict.entity.data.Node;
-import com.citi.vdict.entity.data.Hierarchy;
 import com.citi.vdict.entity.view.BaseView;
 import com.citi.vdict.service.DataViewService;
 import com.citi.vdict.service.DatasourceService;
@@ -48,7 +48,7 @@ public class ViewController {
 		if (targetView != null) {
 			DataView dataView = viewService.getOneView(dbmsType, dsService.isDbaAccount(dsKey), viewName);
 			List<Map<String, Object>> viewData = null;
-			if(!"".equalsIgnoreCase(dataView.getStatement(false))){
+			if (!"".equalsIgnoreCase(dataView.getStatement(false))) {
 				viewData = viewService.queryViewContent(dsKey, dataView, filterDefault);
 			}
 			targetView.wrapViewData(viewData);
