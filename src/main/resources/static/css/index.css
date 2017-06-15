@@ -188,7 +188,6 @@ button{
 
 text {
   font: sans-serif;
-  font-size: 20em;
   pointer-events:none;
 }
 
@@ -211,3 +210,15 @@ z-index: 999;
 font-size: 2em;
 opacity:0;
 }
+
+#clickMenu {
+   position: fixed;
+   left:0;
+   top:0;
+   width:200px;
+   height: 400px;
+   background-color: #fee;
+   border: 1px solid;
+   border-color: #ccc;
+   display: none;
+  }

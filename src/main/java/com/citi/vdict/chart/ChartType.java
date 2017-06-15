@@ -4,16 +4,16 @@ import com.citi.vdict.utils.StringUtils;
 
 public enum ChartType {
 	PIE("PIE"),
-	LINECHART("LINECHART"),
+	BAR("BAR"),
+	LINE("LINE"),
+	PACK("PACK"),
+	TREEMAP("TREEMAP"),
+	FORCE("FORCE"),
 	CHORD("CHORD"),
 	TREE("TREE"),
 	CLUSTER("CLUSTER"),
-	BUNDLE("BUNDLE"),
-	PACK("PACK"),
-	HISTOGRAM("HISTOGRAM"),
-	PARTITION("PARTITION"),
-	TREEMAP("TREEMAP"),
-	FORCE("FORCE");
+	SCATTERPLOT("SCATTERPLOT"),
+	HISTOGRAM("HISTOGRAM");
 	private String value;
 
 	private ChartType(String value) {

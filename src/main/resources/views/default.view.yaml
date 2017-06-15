@@ -1,0 +1,23 @@
+---
+bar chart:
+  configclass: com.citi.vdict.entity.view.BarChart
+  charttype: bar
+line chart:
+  configclass: com.citi.vdict.entity.view.LineChart
+  charttype: line
+pie chart:
+  configclass: com.citi.vdict.entity.view.PieChart
+  charttype: pie
+scatterplot:
+  configclass: com.citi.vdict.entity.view.Scatterplot
+  charttype: scatterplot
+network chart:
+  configclass: com.citi.vdict.entity.view.Force
+  charttype: force
+histogram chart:
+  configclass: com.citi.vdict.entity.view.Histogram
+  charttype: histogram
+pack chart:
+  configclass: com.citi.vdict.entity.view.Pack
+  charttype: pack
+...

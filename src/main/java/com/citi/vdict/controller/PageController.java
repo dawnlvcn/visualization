@@ -11,14 +11,4 @@ public class PageController {
 		return "index";
 	}
 
-	@RequestMapping(value = { "/svg"})
-	public String pack() {
-		return "pack";
-	}
-	
-	
-	@RequestMapping(value = { "/force"})
-	public String force() {
-		return "force";
-	}
 }

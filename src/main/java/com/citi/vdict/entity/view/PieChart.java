@@ -1,6 +1,6 @@
 package com.citi.vdict.entity.view;
 
-public class Histogram implements BaseView {
+public class PieChart implements BaseView {
 
 	@Override
 	public Object getViewData() {

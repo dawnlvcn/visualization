@@ -23,7 +23,8 @@ const menuHeight = height * 3 / 4;
 
 d3.select(".view-content")
   .style("width", containerWidth + "px")
-  .style("height", containerHeight + "px");
+  .style("height", containerHeight + "px")
+  .style("position", "relative");
 
 const viewMenu = d3.select(".view-menu")
                    .style("width", containerWidth + "px")
@@ -52,6 +53,7 @@ var graphContainer = d3.select(".graphContainer")
                        .style("width", width + "px")
                        .style("height", height + "px")
                        .style("display", "none")
+                       .style("position", "absolute")
                        .style("top", margin.top + "px");
 
 var graphDisplay = {
@@ -66,26 +68,18 @@ var graphDisplay = {
     }
 }
 
-function loadViewMenu() {
-    var userName = d3.select("#username").text();
-    var dsName = d3.select("#select-ds").property("value");
-    console.log(dsName);
-    var ALLVIEWNAMECACHENAME = dsName;
-    clearCookie(ALLVIEWNAMECACHENAME); // clear cookie during development
+loadViewMenu();
 
+function loadViewMenu() {
+    var ALLVIEWNAMECACHENAME = "VIEWNAMES";
     var viewNames = null;
     if (localCache) {
         console.log("load all view names from local sessionStorage...");
         viewNames = JSON.parse(localCache.getItem(ALLVIEWNAMECACHENAME));
-    } else {
-        console.log("load all view names from local cookie...");
-        viewNames = loadAllViewNamesCookie();
     }
 
-    console.log(viewNames);
-
     if (viewNames == null) {
-        var parameter = "username=" + userName + "&dsname=" + dsName;
+        var parameter = "";
         d3.request("/view/allViewNames")
           .header("Content-Type", "application/x-www-form-urlencoded")
           .post(parameter, drawMenu);
@@ -104,87 +98,34 @@ function loadViewMenu() {
             if (localCache) {
                 console.log("cache all view names to local sessionStorage...");
                 localCache.setItem(ALLVIEWNAMECACHENAME, JSON.stringify(viewNamesJsonData));
-            } else {
-                console.log("cache all view names data to local cookie...");
-                setAllViewNamesCookie(ALLVIEWNAMECACHENAME, viewNamesJsonData, 1);
             }
         }
-        drawTreeMap(viewNamesJsonData, viewMenu, menuWidth, menuHeight, viewMenuEvent);
-    }
+        TreeMap(viewMenu).data(viewNamesJsonData)
+                         .render()
+                         .call(viewMenuClickEvent);
 
-    function loadAllViewNamesCookie() {
-        var nameArr = null;
-        var nameReg = new RegExp("(^| )" + ALLVIEWNAMECACHENAME + "=([^;]*)(;|$)");
-        if (nameArr = document.cookie.match(nameReg)) {
-            var childrenNameArr = nameArr[2].split(",");
-            var childrenArr = [];
-            for (var index in childrenNameArr) {
-                childrenArr.push({
-                    name  : childrenNameArr[index],
-                    level : 1
-                });
-            }
-            return {
-                name     : "all view names",
-                children : childrenArr
-            };
-        } else {
-            return null;
+        function viewMenuClickEvent(selection) {
+            selection.on("click", function(d) {
+                console.log(selection);
+                var currColor = d3.color(color(d.data.name));
+                currColor.opacity = 1;
+                d3.select(this).style("background", d3.rgb(currColor))
+                viewMenuDisplay.hide();
+                d3.select("#view-home").style("display", "inline-block");
+                d3.select("#current-view")
+                  .attr("value", d3.select(this).text())
+                  .text("\\ " + d3.select(this).text());
+                drawViewGraph(d3.select(this).text());
+            });
+            d3.select("#view-home").on("click", function() {
+                d3.select("#current-view").text("");
+                d3.select("#view-home").style("display", "none");
+                graphDisplay.hide();
+                viewMenuDisplay.show();
+            });
         }
     }
 
-    function setAllViewNamesCookie(name, value, days) {
-        var exp = new Date();
-        exp.setTime(exp.getTime() + days * 24 * 60 * 60 * 1000);
-
-        var newValue = "";
-        var childrenArr = value.children;
-        for (var i = 0; i < childrenArr.length; i++) {
-            newValue += childrenArr[i].name;
-            if (i < childrenArr.length - 1) {
-                newValue += ",";
-            }
-        }
-        document.cookie = name + "=" + newValue + ";expires=" + exp.toGMTString();
-    }
-
-    function clearCookie(name) {
-        var exp = new Date();
-        exp.setTime(exp.getTime() - 1 * 24 * 60 * 60 * 1000);
-        document.cookie = name + "=" + ";expires=" + exp.toGMTString();
-    }
-}
-
-function viewMenuEvent(selection) {
-
-    selection.on("mouseover", function(d) {
-        var currColor = d3.color(color(d.data.name));
-        currColor.opacity = 0.6;
-        d3.select(this)
-          .style("background", d3.rgb(currColor))
-          .style("cursor", "pointer");
-    }).on('mouseout', function(d) {
-        d3.select(this)
-          .style("background", d3.rgb(color(d.data.name)))
-          .style("cursor", "pointer");
-    }).on("click", function(d) {
-        console.log(selection);
-        var currColor = d3.color(color(d.data.name));
-        currColor.opacity = 1;
-        d3.select(this).style("background", d3.rgb(currColor))
-        viewMenuDisplay.hide();
-        d3.select("#view-home").style("display", "inline-block");
-        d3.select("#current-view")
-          .attr("value", d3.select(this).text())
-          .text("\\ " + d3.select(this).text());
-        drawViewGraph(d3.select(this).text());
-    });
-    d3.select("#view-home").on("click", function() {
-        d3.select("#current-view").text("");
-        d3.select("#view-home").style("display", "none");
-        graphDisplay.hide();
-        viewMenuDisplay.show();
-    });
 }
 
 function drawViewGraph(viewName) {
@@ -196,11 +137,7 @@ function drawViewGraph(viewName) {
     if (viewData != null) {
         drawing(null, viewData);
     } else {
-        var userName = d3.select("#username").text();
-        var dsName = d3.select("#select-ds").property("value");
-        var filterdefault = "false";
-        var parameter = "username=" + userName + "&dsname=" + dsName + "&filterdefault=" + filterdefault;
-        parameter += "&viewname=" + viewName;
+        var parameter = "viewname=" + viewName;
         console.log("fetch data for view:" + viewName);
         d3.request("/view/data")
           .header("Content-Type", "application/x-www-form-urlencoded")
@@ -230,34 +167,40 @@ function drawing(error, data) {
             drawTreeMap(viewJsonData.data, graphContainer, width, height, drawTreeMapCallback);
             break;
         case "FORCE" :
-            drawForce(sliceForceData(viewJsonData.data), graphContainer, width, height, drawForceCallback);
+            Force(graphContainer).data(viewJsonData.data).render();
+            // .nodesCall(function(selection) {
+            // selection.on("contextmenu", function() {
+            // d3.event.preventDefault();
+            // clickMenu.show();
+            // });
+            // d3.select(".view-content").on("click", function() {
+            // var event = d3.event;
+            // console.log(event);
+            // clickMenu.hide();
+            // });
+            // });
             break;
         case "PIE" :
-            drawPie(viewJsonData.data, graphContainer, width, height, drawForceCallback);
             break;
         case "TREE" :
-            drawTree(viewJsonData.data, graphContainer, width, height, drawForceCallback);
             break;
         case "PACK" :
-            drawPack(viewJsonData.data, graphContainer, width, height, drawForceCallback);
+            Pack(graphContainer).data(viewJsonData.data).render();
             break;
         case "BUNDLE" :
-            drawBundle(viewJsonData.data, graphContainer, width, height, drawForceCallback);
             break;
         case "CHORT" :
-            drawChort(viewJsonData.data, graphContainer, width, height, drawForceCallback);
             break;
-        case "CLUSTER" :
-            drawCluster(viewJsonData.data, graphContainer, width, height, drawForceCallback);
+        case "BAR" :
+            BarChart(graphContainer).data(viewJsonData.data).render();
             break;
         case "HISTOGRAM" :
-            drawHistogram(viewJsonData.data, graphContainer, width, height, drawForceCallback);
             break;
-        case "LINECHART" :
-            drawLinechart(viewJsonData.data, graphContainer, width, height, drawForceCallback);
+        case "LINE" :
+            LineChart(graphContainer).data(viewJsonData.data).render();
             break;
-        case "PARTITION" :
-            drawPartition(viewJsonData.data, graphContainer, width, height, drawForceCallback);
+        case "SCATTERPLOT" :
+            Scatterplot(graphContainer).data(viewJsonData.data).render();
             break;
         default :
             unSupportChartType(viewJsonData);
@@ -266,117 +209,5 @@ function drawing(error, data) {
         console.log("unsupport chart type: " + viewData.chartType);
         console.log(viewData);
     }
-
-}
-
-d3.select(".view-content")
-  .append("a")
-  .attr("class", "next")
-  .classed("hover", true)
-  .on("click", function() {
-      const defautEleSize = 50;
-      var curri = +(d3.select("#current-view").attr("data-currentIndex"));
-      d3.select("#current-view")
-        .attr("data-currentIndex", curri + defautEleSize);
-      d3.select("#current-view").attr("next", true);
-      pageingDisplay.prevShow();
-      drawViewGraph(d3.select("#current-view").attr("value"));
-      const allCount = d3.select("#current-view").attr("allCount");
-      if ((curri + defautEleSize * 2) > allCount) {
-          pageingDisplay.nextHide();
-      }
-
-  })
-  .text("next");
-
-d3.select(".view-content")
-  .append("a")
-  .attr("class", "prev")
-  .classed("hover", true)
-  .on("click", function() {
-      var curri = +(d3.select("#current-view").attr("data-currentIndex"));
-      const defautEleSize = 50;
-      const targetIndex = curri - defautEleSize;
-      if (targetIndex >= 0) {
-          d3.select("#current-view").attr("data-currentIndex", targetIndex);
-          d3.select("#current-view").attr("next", false);
-          drawViewGraph(d3.select("#current-view").attr("value"));
-          if ((targetIndex - defautEleSize) < 0) {
-              pageingDisplay.prevHide();
-          }
-      }
-  })
-  .text("prev");
-
-var pageingDisplay = {
-    prevHide : function() {
-        d3.select(".prev").style("opacity", "0");
-    },
-    prevShow : function() {
-        d3.select(".prev").style("opacity", "1");
-    },
-
-    nextHide : function() {
-        d3.select(".next").style("opacity", "0");
-    },
-    nextShow : function() {
-        d3.select(".next").style("opacity", "1");
-    }
-}
-
-function sliceForceData(data) {
-    var localData = data;
-
-    d3.select("#current-view").attr("allCount", localData.links.length);
-
-    console.log(data);
-    const defautEleSize = 50;
-    var currentIndex = d3.select("#current-view").attr("data-currentIndex");
-    currentIndex = currentIndex === undefined ? 0 : +currentIndex;
-    const next = d3.select("#current-view").attr("next");
-    var endIndex;
-    console.log(next);
-    if (next == null || next) {
-        endIndex = currentIndex + defautEleSize;
-    } else {
-        endIndex = currentIndex - defautEleSize;
-        endIndex = endIndex <= 0 ? 0 : endIndex;
-    }
-    const nodeLength = localData.nodes.length;
-
-    if (nodeLength > endIndex) {
-        if (localData.links.length == 0) {
-            return localData;
-        }
-        pageingDisplay.nextShow();
-        var newLinks = localData.links.slice(currentIndex, endIndex);
-        var keySet = [];
-        for (var i in newLinks) {
-            keySet.push(newLinks[i].source);
-            keySet.push(newLinks[i].target);
-        }
-        keySet = d3.set(keySet);
-        var newNodes = [];
-        for (var index in data.nodes) {
-            var currentNode = localData.nodes[index];
-            if (keySet.has(currentNode.name)) {
-                newNodes.push(currentNode);
-            }
-        }
-        var newData = {
-            "nodes" : newNodes,
-            "links" : newLinks
-        };
-        return newData;
-    } else {
-        return localData;
-    }
-}
-
-function drawTreeMapCallback(selection) {
-
-}
-
-function drawForceCallback(selection) {
 
 }
